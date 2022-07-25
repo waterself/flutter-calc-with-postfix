@@ -19,7 +19,7 @@ class _mainPageState extends State<mainPage> {
     '7',
     '8',
     '9',
-    'X',
+    'x',
     '4',
     '5',
     '6',

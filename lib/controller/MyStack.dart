@@ -6,13 +6,11 @@ class MyStack {
   }
 
   void pop() {
-    if (!_data.isEmpty) {
-      _data.removeLast();
-    }
+    _data.removeLast();
   }
 
   String peak() {
-    if (!_data.isEmpty) {
+    if (!empty()) {
       return _data.last;
     } else {
       return 'e';
