@@ -15,12 +15,13 @@ class OperatingController {
     } else if (input == '=') {
       screen.result = operator(screen.input);
     } else if (input == '()') {
-      var tmp = screen.input;
-      if (isFirstBracket == true) {
-        screen.input = "(" + tmp;
+      var tmp = screen.input.substring(-1);
+      //how to "x(" if prev is num?
+      if (isFirstBracket == true && isNum(tmp)) {
+        screen.input += '(';
         isFirstBracket = false;
       } else if (isFirstBracket == false) {
-        screen.input = tmp + ")";
+        screen.input += ')';
         isFirstBracket = true;
       }
     } else if (input == '%') {
@@ -37,19 +38,24 @@ class OperatingController {
 
   void deleteAllInput() {
     screen.input = '';
+    isFirstBracket = true;
   }
 
   void deleteOneInput() {
+    var last = screen.input.substring(-1);
     var res;
     res = screen.input.substring(0, screen.input.length - 1);
     screen.input = res;
+    if (last == '(') {
+      isFirstBracket == true;
+    }
   }
 
   String operator(String input) {
-    String convertedInput = input.replaceAll('X', '*');
+    String convertedInput = input.replaceAll('x', '*');
     // ignore: avoid_print
     print(convertedInput);
-    return evalExp(inToPost(input));
+    return evalExp(inToPost(convertedInput));
   }
 
   String add(String a, String b) {
@@ -86,7 +92,7 @@ class OperatingController {
     print("len: $len");
     MyStack opStack = MyStack();
     String pos = '';
-    print("intopost");
+    print("intopost: $pre");
     for (int i = 0; i < pre.length; i++) {
       var element = pre[i];
       //입력이 비면 패스
@@ -125,7 +131,7 @@ class OperatingController {
       if (element == '(') {
         opStack.push(element);
       }
-      if (element == "*") {
+      if (element == '*') {
         pos += '@';
         if (opStack.empty()) {
           opStack.push(element);
@@ -202,8 +208,8 @@ class OperatingController {
       }
     }
     pos += '=';
-    print(pos);
     String ret = pos.toString().replaceAll(',', '');
+    print("ret: $ret");
     return ret;
   }
 
@@ -223,9 +229,9 @@ class OperatingController {
   }
 
   String evalExp(String input) {
-    print("evalexp");
+    print("evalexp $input");
     String exp = input.replaceAll(' ', '');
-    print(exp);
+    print("exp: $exp");
     MyStack evStack = MyStack();
     int len = exp.length;
     String d = '';
@@ -233,7 +239,6 @@ class OperatingController {
     for (int i = 0; i < len; i++) {
       var element = exp[i];
       if (element == ' ') {
-        print("pass");
         continue;
       }
       //숫자가 나오면
@@ -255,22 +260,19 @@ class OperatingController {
           element == "-" ||
           element == "*" ||
           element == "/") {
-        evStack.push(d);
+        if (d != '') {
+          evStack.push(d);
+        }
         print(evStack.toString());
         d = '';
-      } else {
-        //숫자가 아니고 빈칸도 아님 -> 연산자임
         if (element == '+' ||
             element == '-' ||
             element == '*' ||
             element == '/') {
-          ///해당부분이 에러
           String b = evStack.peak();
-          // b.replaceAll('[0-9]', '');
           evStack.pop();
 
           String a = evStack.peak();
-          // a.replaceAll('[0-9]', '');
           evStack.pop();
 
           String res = '';
@@ -298,10 +300,29 @@ class OperatingController {
           }
           evStack.push(res);
         }
+      } else {
+        continue;
       }
     }
     res = evStack.peak();
     print("result: $res");
     return res;
+  }
+
+  bool isNum(String element) {
+    if (element == "0" ||
+        element == "1" ||
+        element == "2" ||
+        element == "3" ||
+        element == "4" ||
+        element == "5" ||
+        element == "6" ||
+        element == "7" ||
+        element == "8" ||
+        element == "9") {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
