@@ -1,6 +1,8 @@
+
 import 'package:calc/const.dart';
 import 'package:calc/controller/operating_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:calc/view/log_page.dart';
 
 class mainPage extends StatefulWidget {
   const mainPage({Key? key}) : super(key: key);
@@ -42,7 +44,18 @@ class _mainPageState extends State<mainPage> {
         actions: [
           ///how to make space for Icons
           ///will show eval log
-          Icon(Icons.timer)
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: IconButton(
+              icon: Icon(Icons.timer),
+              onPressed:(){
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => calcLog()));
+              } 
+            )
+          )
         ],
       ),
       body: Container(
@@ -65,21 +78,23 @@ class _mainPageState extends State<mainPage> {
                       margin: EdgeInsets.all(screenMargin),
                       alignment: Alignment.topCenter,
                       child: OPcontroller.screen.input == ''
+                          // ignore: prefer_const_constructors
                           ? Text(
                               "0",
-                              style: TextStyle(fontSize: 25),
+                              style: TextStyle(fontSize: screenInputFontSize),
                             )
                           : Text(
                               OPcontroller.screen.input,
-                              style: TextStyle(fontSize: 25),
+                              style: TextStyle(fontSize: screenInputFontSize),
                             ),
                     ), //input
                     Container(
                       margin: EdgeInsets.all(screenMargin),
                       alignment: Alignment.centerRight,
                       child: Text(OPcontroller.screen.result,
+                          // ignore: prefer_const_constructors
                           style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)),
+                              fontSize: screenResultFontSize, fontWeight: FontWeight.bold)),
                     ), //answer part
                   ],
                 ), //input part
@@ -129,7 +144,7 @@ class _mainPageState extends State<mainPage> {
           child: Text(
             "$input",
             style: const TextStyle(
-                color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           )),
     );
   }

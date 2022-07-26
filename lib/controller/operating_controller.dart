@@ -1,9 +1,10 @@
 import 'package:calc/model/screen_model.dart';
-import 'package:calc/controller/MyStack.dart';
+import 'package:calc/utils/MyStack.dart';
+
 
 //String element
 class OperatingController {
-  var screen = ScreenModel('', '0');
+  var screen = ScreenModel('', '0', List.filled(10, null));
 
   bool isFirstBracket = true;
 
@@ -14,6 +15,16 @@ class OperatingController {
       deleteOneInput();
     } else if (input == '=') {
       screen.result = operator(screen.input);
+      // 연산자 앞에 숫자없음, 0/1문제같은건 여기서 예외로 빼기
+      String eval = screen.input.replaceAll('=', '') + ' = ' + screen.result;
+      print(eval);
+      print(screen.Log);
+      if (screen.Log.last == null) {
+        screen.Log.add(screen.result);
+      } else {
+        screen.Log.removeAt(0);
+        screen.Log.add(screen.result);
+      }
     } else if (input == '()') {
       var tmp = screen.input.substring(-1);
       //how to "x(" if prev is num?

@@ -1,3 +1,4 @@
+//보통 들어가는 파일들 - 어디서든지 불러서 쓰는 함수, 분리시킬 수 있는 함수
 class MyStack {
   final _data = <String>[];
 
