@@ -1,12 +1,18 @@
+import 'dart:collection';
+
 import 'package:calc/model/screen_model.dart';
 import 'package:calc/utils/MyStack.dart';
 
 
 //String element
 class OperatingController {
-  var screen = ScreenModel('', '0', List.filled(10, null));
+  var screen = ScreenModel('', '0', -1, List.empty(growable: true));
 
   bool isFirstBracket = true;
+  
+  List<Map> getRecord(){
+    return screen.record;
+  }
 
   void addInput(var input) {
     if (input == 'C') {
@@ -16,14 +22,15 @@ class OperatingController {
     } else if (input == '=') {
       screen.result = operator(screen.input);
       // 연산자 앞에 숫자없음, 0/1문제같은건 여기서 예외로 빼기
-      String eval = screen.input.replaceAll('=', '') + ' = ' + screen.result;
-      print(eval);
-      print(screen.Log);
-      if (screen.Log.last == null) {
-        screen.Log.add(screen.result);
+      // String eval = screen.input.replaceAll('=', '') + ' = ' + screen.result;
+      String exp = screen.input + "=";
+      if (screen.top < 10) {
+        screen.record.add({exp:screen.result});
+        screen.top++;
+        print(screen.record);
       } else {
-        screen.Log.removeAt(0);
-        screen.Log.add(screen.result);
+        screen.record.removeAt(0);
+        screen.record.add({exp:screen.result});
       }
     } else if (input == '()') {
       var tmp = screen.input.substring(-1);
@@ -40,7 +47,7 @@ class OperatingController {
         screen.input += '1/100';
       } else {
         var tmp = screen.input;
-        screen.input += '/100';
+        screen .input += '/100';
       }
     } else {
       screen.input += input;
