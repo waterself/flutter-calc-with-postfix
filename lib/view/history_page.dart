@@ -57,11 +57,12 @@ class _HistoryPageState extends State<HistoryPage> {
           )
         ),
          child: Row(
+
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: 
           [
-            Text(record[index].keys.toString().replaceAll("[()]", 'replace'), ),
-            Text(record[index].values.toString().replaceAll("[()]", 'replace'))
+            Text(record[index].keys.toString().replaceAll(RegExp("[()]"), '')),
+            Text(record[index].values.toString().replaceAll(RegExp("[()]"), ''))
           ],
          ),
        )

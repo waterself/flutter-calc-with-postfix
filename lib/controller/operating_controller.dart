@@ -23,7 +23,7 @@ class OperatingController {
       screen.result = operator(screen.input);
       // 연산자 앞에 숫자없음, 0/1문제같은건 여기서 예외로 빼기
       // String eval = screen.input.replaceAll('=', '') + ' = ' + screen.result;
-      String exp = screen.input + "=";
+      String exp = screen.input;
       if (screen.top < 10) {
         screen.record.add({exp:screen.result});
         screen.top++;
