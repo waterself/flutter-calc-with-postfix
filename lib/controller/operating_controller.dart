@@ -1,16 +1,13 @@
-import 'dart:collection';
-
-import 'package:calc/model/screen_model.dart';
-import 'package:calc/utils/MyStack.dart';
-
+import 'package:calcwithpostfix/model/screen_model.dart';
+import 'package:calcwithpostfix/utils/MyStack.dart';
 
 //String element
 class OperatingController {
   var screen = ScreenModel('', '0', -1, List.empty(growable: true));
 
   bool isFirstBracket = true;
-  
-  List<Map> getRecord(){
+
+  List<Map> getRecord() {
     return screen.record;
   }
 
@@ -25,16 +22,15 @@ class OperatingController {
       // String eval = screen.input.replaceAll('=', '') + ' = ' + screen.result;
       String exp = screen.input;
       if (screen.top < 10) {
-        screen.record.add({exp:screen.result});
+        screen.record.add({exp: screen.result});
         screen.top++;
         print(screen.record);
       } else {
         screen.record.removeAt(0);
-        screen.record.add({exp:screen.result});
+        screen.record.add({exp: screen.result});
       }
     } else if (input == '()') {
       var tmp = screen.input.substring(-1);
-      //how to "x(" if prev is num?
       if (isFirstBracket == true && isNum(tmp)) {
         screen.input += '(';
         isFirstBracket = false;
@@ -47,7 +43,7 @@ class OperatingController {
         screen.input += '1/100';
       } else {
         var tmp = screen.input;
-        screen .input += '/100';
+        screen.input += '/100';
       }
     } else {
       screen.input += input;
@@ -118,6 +114,17 @@ class OperatingController {
         continue;
       }
       //숫자면 출력식에 바로 추가
+      // if (element == "0" ||
+      //     element == "1" ||
+      //     element == "2" ||
+      //     element == "3" ||
+      //     element == "4" ||
+      //     element == "5" ||
+      //     element == "6" ||
+      //     element == "7" ||
+      //     element == "8" ||
+      //     element == "9" ||
+      //     element == ".") {
       if (element == "0" ||
           element == "1" ||
           element == "2" ||
@@ -127,21 +134,21 @@ class OperatingController {
           element == "6" ||
           element == "7" ||
           element == "8" ||
-          element == "9" ||
-          element == ".") {
+          element == "9") {
         pos += element;
         //숫자가 아니면 공백
-        if (element != "0" ||
-            element != "1" ||
-            element != "2" ||
-            element != "3" ||
-            element != "4" ||
-            element != "5" ||
-            element != "6" ||
-            element != "7" ||
-            element != "8" ||
-            element != "9") {
-          // pos += ' ';
+        // if (element != "0" ||
+        //     element != "1" ||
+        //     element != "2" ||
+        //     element != "3" ||
+        //     element != "4" ||
+        //     element != "5" ||
+        //     element != "6" ||
+        //     element != "7" ||
+        //     element != "8" ||
+        //     element != "9") {
+        //   // pos += ' ';
+        if (isNum(element)) {
         } else {
           continue;
         }
@@ -269,8 +276,7 @@ class OperatingController {
           element == "6" ||
           element == "7" ||
           element == "8" ||
-          element == "9" ||
-          element == ".") {
+          element == "9") {
         d += element;
         //숫자가 끝나면 push
       } else if (d != ' ' && element == '@' ||
@@ -322,11 +328,35 @@ class OperatingController {
         continue;
       }
     }
-    res = evStack.peak();
+    //case 1 / 0
+    double tmp = double.parse(evStack.peak());
+    double fraction = tmp - tmp.truncate();
+    if (fraction == 0) {
+      int ret = tmp.toInt();
+      res = ret.toString();
+    } else {
+      res = tmp.toString();
+    }
     print("result: $res");
     return res;
   }
 
+  // bool isNumHasDot(String element) {
+  //   RegExp exp = RegExp('[0-9]+.');
+  //   if (exp.hasMatch(element)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  // bool isNum(String element) {
+  //   RegExp exp = RegExp("[0-9]");
+  //   if (exp.hasMatch(element)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+// }
   bool isNum(String element) {
     if (element == "0" ||
         element == "1" ||

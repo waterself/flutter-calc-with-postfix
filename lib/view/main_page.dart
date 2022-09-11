@@ -1,8 +1,8 @@
 
-import 'package:calc/const.dart';
-import 'package:calc/controller/operating_controller.dart';
+import 'package:calcwithpostfix/const.dart';
+import 'package:calcwithpostfix/controller/operating_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:calc/view/history_page.dart';
+import 'package:calcwithpostfix/view/history_page.dart';
 
 class mainPage extends StatefulWidget {
   const mainPage({Key? key}) : super(key: key);

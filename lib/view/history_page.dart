@@ -1,9 +1,6 @@
 import 'dart:collection';
 
-import 'package:calc/model/screen_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/foundation/key.dart';
 
 
 class HistoryPage extends StatefulWidget {
