@@ -1,5 +1,6 @@
-import 'package:calcwithpostfix/model/screen_model.dart';
-import 'package:calcwithpostfix/utils/MyStack.dart';
+import 'package:calc/view/main_page.dart';
+import 'package:calc/model/screen_model.dart';
+import 'package:calc/utils/MyStack.dart';
 
 //String element
 class OperatingController {
@@ -329,13 +330,20 @@ class OperatingController {
       }
     }
     //case 1 / 0
-    double tmp = double.parse(evStack.peak());
-    double fraction = tmp - tmp.truncate();
-    if (fraction == 0) {
-      int ret = tmp.toInt();
-      res = ret.toString();
+    double? doubleTryParse = double.tryParse(evStack.peak());
+    if (doubleTryParse != null &&
+        doubleTryParse != double.nan &&
+        doubleTryParse != double.infinity) {
+      double tmp = double.parse(evStack.peak());
+      double fraction = tmp - tmp.truncate();
+      if (fraction == 0) {
+        int ret = tmp.toInt();
+        res = ret.toString();
+      } else {
+        res = tmp.toString();
+      }
     } else {
-      res = tmp.toString();
+      res = evStack.peak();
     }
     print("result: $res");
     return res;

@@ -1,8 +1,7 @@
-
-import 'package:calcwithpostfix/const.dart';
-import 'package:calcwithpostfix/controller/operating_controller.dart';
+import 'package:calc/const.dart';
+import 'package:calc/controller/operating_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:calcwithpostfix/view/history_page.dart';
+import 'package:calc/view/history_page.dart';
 
 class mainPage extends StatefulWidget {
   const mainPage({Key? key}) : super(key: key);
@@ -24,17 +23,16 @@ class _mainPageState extends State<mainPage> {
           ///how to make space for Icons
           ///will show eval log
           Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            child: IconButton(
-              icon: Icon(Icons.timer),
-              onPressed:(){
-                Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HistoryPage(record: OPcontroller.getRecord())));
-              } 
-            )
-          )
+              margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: IconButton(
+                  icon: Icon(Icons.timer),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                HistoryPage(record: OPcontroller.getRecord())));
+                  }))
         ],
       ),
       body: Container(
@@ -58,7 +56,7 @@ class _mainPageState extends State<mainPage> {
                       alignment: Alignment.topCenter,
                       // //레이아웃빌더 높이,넓이등 다양한 속성을 계산해야 할 때 사용
                       // child: LayoutBuilder(builder: (context, constraints) {
-                        
+
                       //   if(OPcontroller.screen.input == ''){
                       //     return Text("0"
                       //     );
@@ -73,7 +71,7 @@ class _mainPageState extends State<mainPage> {
                       child: OPcontroller.screen.input == ''
                           // ignore: prefer_const_constructors
                           // 조건을 벨류에만 주는 것이 좋아보임
-                           ?Text(
+                          ? Text(
                               "0",
                               style: TextStyle(fontSize: screenInputFontSize),
                             )
@@ -88,7 +86,8 @@ class _mainPageState extends State<mainPage> {
                       child: Text(OPcontroller.screen.result,
                           // ignore: prefer_const_constructors
                           style: TextStyle(
-                              fontSize: screenResultFontSize, fontWeight: FontWeight.bold)),
+                              fontSize: screenResultFontSize,
+                              fontWeight: FontWeight.bold)),
                     ), //answer part
                   ],
                 ), //input part

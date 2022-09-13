@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:calcwithpostfix/view/main_page.dart';
+import 'package:calc/view/main_page.dart';
 
 void main() {
   runApp(const MyApp());
