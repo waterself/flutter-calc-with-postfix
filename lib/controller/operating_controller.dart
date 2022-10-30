@@ -1,17 +1,21 @@
 import 'dart:collection';
+import 'package:calc/utils/check_num.dart';
 
 import 'package:calc/model/screen_model.dart';
-import 'package:calc/utils/MyStack.dart';
-
+import 'package:calc/utils/my_stack.dart';
 
 //String element
 class OperatingController {
-  var screen = ScreenModel('', '0', -1, List.empty(growable: true));
+  var screenModel = ScreenModel('', '0', ListQueue(10));
 
   bool isFirstBracket = true;
-  
-  List<Map> getRecord(){
-    return screen.record;
+
+  ListQueue<Map> getHistory() {
+    return screenModel.history;
+  }
+
+  int getHistoryLength() {
+    return screenModel.history.length;
   }
 
   void addInput(var input) {
@@ -20,50 +24,51 @@ class OperatingController {
     } else if (input == 'DEL') {
       deleteOneInput();
     } else if (input == '=') {
-      screen.result = operator(screen.input);
-      // 연산자 앞에 숫자없음, 0/1문제같은건 여기서 예외로 빼기
-      // String eval = screen.input.replaceAll('=', '') + ' = ' + screen.result;
-      String exp = screen.input;
-      if (screen.top < 10) {
-        screen.record.add({exp:screen.result});
-        screen.top++;
-        print(screen.record);
+      screenModel.result = operator(screenModel.input);
+      // String eval = screenModel.input.replaceAll('=', '') + ' = ' + screenModel.result;
+      String exp = screenModel.input;
+      if (screenModel.history.length < 5) {
+        screenModel.history.add({exp: screenModel.result});
+        print(screenModel.history.length);
+        print(screenModel.history);
       } else {
-        screen.record.removeAt(0);
-        screen.record.add({exp:screen.result});
+        screenModel.history.removeFirst();
+        screenModel.history.add({exp: screenModel.result});
+        print(screenModel.history.length);
+        print(screenModel.history);
       }
     } else if (input == '()') {
-      var tmp = screen.input.substring(-1);
+      var tmp = screenModel.input.substring(-1);
       //how to "x(" if prev is num?
       if (isFirstBracket == true && isNum(tmp)) {
-        screen.input += '(';
+        screenModel.input += '(';
         isFirstBracket = false;
       } else if (isFirstBracket == false) {
-        screen.input += ')';
+        screenModel.input += ')';
         isFirstBracket = true;
       }
     } else if (input == '%') {
-      if (screen.input == '') {
-        screen.input += '1/100';
+      if (screenModel.input == '') {
+        screenModel.input += '1/100';
       } else {
-        var tmp = screen.input;
-        screen .input += '/100';
+        var tmp = screenModel.input;
+        screenModel.input += '/100';
       }
     } else {
-      screen.input += input;
+      screenModel.input += input;
     }
   }
 
   void deleteAllInput() {
-    screen.input = '';
+    screenModel.input = '';
     isFirstBracket = true;
   }
 
   void deleteOneInput() {
-    var last = screen.input.substring(-1);
+    var last = screenModel.input.substring(-1);
     var res;
-    res = screen.input.substring(0, screen.input.length - 1);
-    screen.input = res;
+    res = screenModel.input.substring(0, screenModel.input.length - 1);
+    screenModel.input = res;
     if (last == '(') {
       isFirstBracket == true;
     }
@@ -118,29 +123,10 @@ class OperatingController {
         continue;
       }
       //숫자면 출력식에 바로 추가
-      if (element == "0" ||
-          element == "1" ||
-          element == "2" ||
-          element == "3" ||
-          element == "4" ||
-          element == "5" ||
-          element == "6" ||
-          element == "7" ||
-          element == "8" ||
-          element == "9" ||
-          element == ".") {
+      if (isNumHasDot(element)) {
         pos += element;
         //숫자가 아니면 공백
-        if (element != "0" ||
-            element != "1" ||
-            element != "2" ||
-            element != "3" ||
-            element != "4" ||
-            element != "5" ||
-            element != "6" ||
-            element != "7" ||
-            element != "8" ||
-            element != "9") {
+        if (isNum(element)) {
           // pos += ' ';
         } else {
           continue;
@@ -260,17 +246,7 @@ class OperatingController {
         continue;
       }
       //숫자가 나오면
-      if (element == "0" ||
-          element == "1" ||
-          element == "2" ||
-          element == "3" ||
-          element == "4" ||
-          element == "5" ||
-          element == "6" ||
-          element == "7" ||
-          element == "8" ||
-          element == "9" ||
-          element == ".") {
+      if (isNumHasDot(element)) {
         d += element;
         //숫자가 끝나면 push
       } else if (d != ' ' && element == '@' ||
@@ -322,25 +298,26 @@ class OperatingController {
         continue;
       }
     }
-    res = evStack.peak();
+    double? doubleTryParse = double.tryParse(evStack.peak());
+    if (doubleTryParse != null &&
+        doubleTryParse != double.nan &&
+        doubleTryParse != double.infinity) {
+      double tmp = double.parse(evStack.peak());
+      double fraction = tmp - tmp.truncate();
+      if (fraction == 0) {
+        int ret = tmp.toInt();
+        res = ret.toString();
+      } else {
+        res = tmp.toString();
+      }
+    } else if (doubleTryParse == null ||
+        doubleTryParse == double.nan ||
+        doubleTryParse == double.infinity) {
+      res = "ERROR";
+    } else {
+      res = evStack.peak();
+    }
     print("result: $res");
     return res;
-  }
-
-  bool isNum(String element) {
-    if (element == "0" ||
-        element == "1" ||
-        element == "2" ||
-        element == "3" ||
-        element == "4" ||
-        element == "5" ||
-        element == "6" ||
-        element == "7" ||
-        element == "8" ||
-        element == "9") {
-      return true;
-    } else {
-      return false;
-    }
   }
 }

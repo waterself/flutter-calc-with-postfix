@@ -1,18 +1,17 @@
-
 import 'package:calc/const.dart';
 import 'package:calc/controller/operating_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:calc/view/history_page.dart';
 
-class mainPage extends StatefulWidget {
-  const mainPage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<mainPage> createState() => _mainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _mainPageState extends State<mainPage> {
-  var OPcontroller = OperatingController();
+class _MainPageState extends State<MainPage> {
+  var controller = OperatingController();
   final List<String> buttons = constButtons;
 
   @override
@@ -24,17 +23,17 @@ class _mainPageState extends State<mainPage> {
           ///how to make space for Icons
           ///will show eval log
           Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            child: IconButton(
-              icon: Icon(Icons.timer),
-              onPressed:(){
-                Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HistoryPage(record: OPcontroller.getRecord())));
-              } 
-            )
-          )
+              margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: IconButton(
+                  icon: Icon(Icons.timer),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HistoryPage(
+                                history: controller.getHistory(),
+                                historyLength: controller.getHistoryLength())));
+                  }))
         ],
       ),
       body: Container(
@@ -58,37 +57,40 @@ class _mainPageState extends State<mainPage> {
                       alignment: Alignment.topCenter,
                       // //레이아웃빌더 높이,넓이등 다양한 속성을 계산해야 할 때 사용
                       // child: LayoutBuilder(builder: (context, constraints) {
-                        
-                      //   if(OPcontroller.screen.input == ''){
+
+                      //   if(controller.screen.input == ''){
                       //     return Text("0"
                       //     );
                       //   }
                       //   else{
                       //     return Text(
-                      //         OPcontroller.screen.input,
+                      //         controller.screen.input,
                       //         style: TextStyle(fontSize: screenInputFontSize),
                       //       );
                       //   }
                       // },)
-                      child: OPcontroller.screen.input == ''
+                      child: controller.screenModel.input == ''
                           // ignore: prefer_const_constructors
                           // 조건을 벨류에만 주는 것이 좋아보임
-                           ?Text(
+                          // 답이 나오면 숫자 클릭시 바로 새 수식이 작성되도록 함
+                          ? const Text(
                               "0",
                               style: TextStyle(fontSize: screenInputFontSize),
                             )
                           : Text(
-                              OPcontroller.screen.input,
-                              style: TextStyle(fontSize: screenInputFontSize),
+                              controller.screenModel.input,
+                              style: const TextStyle(
+                                  fontSize: screenInputFontSize),
                             ),
                     ), //input
                     Container(
-                      margin: EdgeInsets.all(screenMargin),
+                      margin: const EdgeInsets.all(screenMargin),
                       alignment: Alignment.centerRight,
-                      child: Text(OPcontroller.screen.result,
+                      child: Text(controller.screenModel.result,
                           // ignore: prefer_const_constructors
                           style: TextStyle(
-                              fontSize: screenResultFontSize, fontWeight: FontWeight.bold)),
+                              fontSize: screenResultFontSize,
+                              fontWeight: FontWeight.bold)),
                     ), //answer part
                   ],
                 ), //input part
@@ -126,13 +128,13 @@ class _mainPageState extends State<mainPage> {
   ///toMakeButtons
   Container dialButton(var input) {
     return Container(
-      margin: EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
               primary: Colors.grey.shade100, shape: CircleBorder()),
           onPressed: () {
             setState(() {
-              OPcontroller.addInput("$input");
+              controller.addInput("$input");
             });
           },
           child: Text(
