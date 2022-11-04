@@ -1,8 +1,6 @@
 import 'dart:collection';
-import 'package:calc/model/screen_model.dart';
+import 'package:calc/const.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/foundation/key.dart';
 
 class HistoryPage extends StatefulWidget {
   final ListQueue<Map> history;
@@ -51,6 +49,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Container result(ListQueue<Map> history, int index) {
     return Container(
+        height: 50,
         decoration: const BoxDecoration(
           color: Colors.white60,
         ),
@@ -62,16 +61,20 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(history
-                  .elementAt(index)
-                  .keys
-                  .toString()
-                  .replaceAll(RegExp("[()]"), '')),
-              Text(history
-                  .elementAt(index)
-                  .values
-                  .toString()
-                  .replaceAll(RegExp("[()]"), ''))
+              Text(
+                  style: const TextStyle(fontSize: historyFontSize),
+                  history
+                      .elementAt(index)
+                      .keys
+                      .toString()
+                      .replaceAll(RegExp("[()]"), '')),
+              Text(
+                  style: const TextStyle(fontSize: historyFontSize),
+                  history
+                      .elementAt(index)
+                      .values
+                      .toString()
+                      .replaceAll(RegExp("[()]"), ''))
             ],
           ),
         ));

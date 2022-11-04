@@ -7,7 +7,7 @@ import 'package:calc/utils/my_stack.dart';
 //String element
 class OperatingController {
   var screenModel = ScreenModel('', '0', ListQueue(10));
-
+  bool isCalced = false;
   bool isFirstBracket = true;
 
   ListQueue<Map> getHistory() {
@@ -19,23 +19,28 @@ class OperatingController {
   }
 
   void addInput(var input) {
+    if (isCalced == true) {
+      deleteAllInput();
+      isCalced = false;
+    }
     if (input == 'C') {
       deleteAllInput();
     } else if (input == 'DEL') {
       deleteOneInput();
     } else if (input == '=') {
       screenModel.result = operator(screenModel.input);
+      isCalced = true;
       // String eval = screenModel.input.replaceAll('=', '') + ' = ' + screenModel.result;
       String exp = screenModel.input;
       if (screenModel.history.length < 5) {
         screenModel.history.add({exp: screenModel.result});
-        print(screenModel.history.length);
-        print(screenModel.history);
+        //print(screenModel.history.length);
+        //print(screenModel.history);
       } else {
         screenModel.history.removeFirst();
         screenModel.history.add({exp: screenModel.result});
-        print(screenModel.history.length);
-        print(screenModel.history);
+        //print(screenModel.history.length);
+        //print(screenModel.history);
       }
     } else if (input == '()') {
       var tmp = screenModel.input.substring(-1);
@@ -51,7 +56,7 @@ class OperatingController {
       if (screenModel.input == '') {
         screenModel.input += '1/100';
       } else {
-        var tmp = screenModel.input;
+        //var tmp = screenModel.input;
         screenModel.input += '/100';
       }
     } else {
@@ -66,8 +71,7 @@ class OperatingController {
 
   void deleteOneInput() {
     var last = screenModel.input.substring(-1);
-    var res;
-    res = screenModel.input.substring(0, screenModel.input.length - 1);
+    var res = screenModel.input.substring(0, screenModel.input.length - 1);
     screenModel.input = res;
     if (last == '(') {
       isFirstBracket == true;
@@ -75,10 +79,13 @@ class OperatingController {
   }
 
   String operator(String input) {
-    String convertedInput = input.replaceAll('x', '*');
-    // ignore: avoid_print
-    print(convertedInput);
-    return evalExp(inToPost(convertedInput));
+    try {
+      String convertedInput = input.replaceAll('x', '*');
+      print(convertedInput);
+      return evalExp(inToPost(convertedInput));
+    } catch (e) {
+      return "ERROR";
+    }
   }
 
   String add(String a, String b) {

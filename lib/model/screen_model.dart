@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'package:flutter/cupertino.dart';
-
 class ScreenModel {
   String input;
   String result;
