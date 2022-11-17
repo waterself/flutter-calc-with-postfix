@@ -13,8 +13,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   var controller = OperatingController();
   final List<String> buttons = constButtons;
+
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData deviceData = MediaQuery.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("calculator"),
@@ -53,24 +56,7 @@ class _MainPageState extends State<MainPage> {
                   Container(
                     margin: const EdgeInsets.all(screenMargin),
                     alignment: Alignment.topCenter,
-                    // //레이아웃빌더 높이,넓이등 다양한 속성을 계산해야 할 때 사용
-                    // child: LayoutBuilder(builder: (context, constraints) {
-
-                    //   if(controller.screen.input == ''){
-                    //     return Text("0"
-                    //     );
-                    //   }
-                    //   else{
-                    //     return Text(
-                    //         controller.screen.input,
-                    //         style: TextStyle(fontSize: screenInputFontSize),
-                    //       );
-                    //   }
-                    // },)
                     child: controller.screenModel.input == ''
-                        // ignore: prefer_const_constructors
-                        // 조건을 벨류에만 주는 것이 좋아보임
-                        // 답이 나오면 숫자 클릭시 바로 새 수식이 작성되도록 함
                         ? const Text(
                             "0",
                             style: TextStyle(fontSize: screenInputFontSize),
@@ -85,8 +71,7 @@ class _MainPageState extends State<MainPage> {
                     margin: const EdgeInsets.all(screenMargin),
                     alignment: Alignment.centerRight,
                     child: Text(controller.screenModel.result,
-                        // ignore: prefer_const_constructors
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: screenResultFontSize,
                             fontWeight: FontWeight.bold)),
                   ), //answer part
@@ -118,7 +103,7 @@ class _MainPageState extends State<MainPage> {
             ),
           )
         ],
-      ), //전체 화면 지워되 될 것 같음
+      ),
     );
   }
 

@@ -7,7 +7,6 @@ import 'package:calc/utils/my_stack.dart';
 //String element
 class OperatingController {
   var screenModel = ScreenModel('', '0', ListQueue(10));
-  bool isCalced = false;
   bool isFirstBracket = true;
 
   ListQueue<Map> getHistory() {
@@ -19,17 +18,12 @@ class OperatingController {
   }
 
   void addInput(var input) {
-    if (isCalced == true) {
-      deleteAllInput();
-      isCalced = false;
-    }
     if (input == 'C') {
       deleteAllInput();
     } else if (input == 'DEL') {
       deleteOneInput();
     } else if (input == '=') {
       screenModel.result = operator(screenModel.input);
-      isCalced = true;
       // String eval = screenModel.input.replaceAll('=', '') + ' = ' + screenModel.result;
       String exp = screenModel.input;
       if (screenModel.history.length < 5) {
@@ -70,18 +64,19 @@ class OperatingController {
   }
 
   void deleteOneInput() {
-    var last = screenModel.input.substring(-1);
-    var res = screenModel.input.substring(0, screenModel.input.length - 1);
-    screenModel.input = res;
-    if (last == '(') {
-      isFirstBracket == true;
+    if (screenModel.input.isNotEmpty) {
+      var res = screenModel.input.substring(0, screenModel.input.length - 1);
+      screenModel.input = res;
+      if (res == '(') {
+        isFirstBracket == true;
+      }
     }
   }
 
   String operator(String input) {
     try {
       String convertedInput = input.replaceAll('x', '*');
-      print(convertedInput);
+      //print(convertedInput);
       return evalExp(inToPost(convertedInput));
     } catch (e) {
       return "ERROR";
@@ -125,14 +120,14 @@ class OperatingController {
     print("intopost: $pre");
     for (int i = 0; i < pre.length; i++) {
       var element = pre[i];
-      //입력이 비면 패스
+      //continue space
       if (element == ' ') {
         continue;
       }
-      //숫자면 출력식에 바로 추가
+      //if number then add to pos
       if (isNumHasDot(element)) {
         pos += element;
-        //숫자가 아니면 공백
+        //is not number, add space
         if (isNum(element)) {
           // pos += ' ';
         } else {
@@ -252,10 +247,10 @@ class OperatingController {
       if (element == ' ') {
         continue;
       }
-      //숫자가 나오면
+      //if number start
       if (isNumHasDot(element)) {
         d += element;
-        //숫자가 끝나면 push
+        //if number end then push
       } else if (d != ' ' && element == '@' ||
           element == "+" ||
           element == "-" ||

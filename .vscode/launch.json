@@ -10,6 +10,12 @@
             "type": "dart"
         },
         {
+            "name": "calc-chrome-debug",
+            "request": "launch",
+            "type": "dart",
+            "args": ["-d", "chrome"]
+        },
+        {
             "name": "flutter-calc-with-postfix window",
             "request": "launch",
             "type": "dart",
